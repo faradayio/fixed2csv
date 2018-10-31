@@ -1,15 +1,8 @@
-extern crate csv;
-extern crate env_logger;
-extern crate failure;
-extern crate humansize;
-extern crate humantime;
-#[macro_use]
-extern crate log;
-extern crate structopt;
-
+use csv;
 use failure::Error;
 use humansize::{file_size_opts, FileSize};
 use humantime::format_duration;
+use log::debug;
 use std::{
     cmp::min,
     io::{prelude::*, stdin, stdout, BufReader},
@@ -65,9 +58,9 @@ fn main() -> Result<(), Error> {
 
 /// Extract fixed-width fields from the input, and write to the output as a CSV.
 fn extract_fields(
-    r: &mut Read,
+    r: &mut dyn Read,
     field_widths: &[usize],
-    w: &mut Write,
+    w: &mut dyn Write,
 ) -> Result<usize, Error> {
     // Wrap up our I/O streams to get the APIs we'll need.
     let mut buffered = BufReader::new(r);
